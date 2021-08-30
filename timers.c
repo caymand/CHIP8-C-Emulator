@@ -21,7 +21,7 @@ int set_delay_timer(unsigned short ticks) {
     if (pthread_mutex_lock(&delay_timer_mutex) != 0 ) {
         printf("Error setting up the delay timer\n");
     }
-    //In this case the runlop will be invalidated, so we have to start it again
+    //In this case the runlop was invalidated, so we have to start it again
     if (delay_timer == 0) {
         unsigned short *ticks_ref = malloc(sizeof(unsigned short));
         *ticks_ref = ticks;
@@ -29,6 +29,7 @@ int set_delay_timer(unsigned short ticks) {
             printf("Error unlocking the mutex\n");
         }
         setup_delay_timer(ticks_ref);
+        return 1;
     }
     delay_timer = ticks;
     if (pthread_mutex_unlock(&delay_timer_mutex) != 0) {
@@ -78,10 +79,10 @@ static void decrement_delay_timer(CFRunLoopTimerRef timer, void *info) {
     }
     delay_timer--;
     if (delay_timer == 0) {
-        CFRunLoopTimerInvalidate(timer); //Invalidates runloop since this is the only source
         if (pthread_mutex_unlock(&delay_timer_mutex) != 0) {
             printf("Error unlocking the mutex\n");
         }
+        CFRunLoopTimerInvalidate(timer); //Invalidates runloop since this is the only source
         return;
     }
     if (pthread_mutex_unlock(&delay_timer_mutex) != 0) {
