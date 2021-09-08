@@ -21,5 +21,4 @@ static int decode_first_nible_f(unsigned char second_nible, unsigned char third_
 
 static int update_display(unsigned char x, unsigned char y, unsigned char N);
 
-static int handle_event(SDL_Event *event);
 

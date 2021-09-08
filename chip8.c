@@ -33,9 +33,13 @@ int main() {
     while(test < 50) {
         //Handle events
         while(SDL_PollEvent(&event)) {
-            handle_event(&event);
+            if (event.type == SDL_QUIT) {
+                test = 50;
+            }
+            else {
+                handle_event(&event);
+            }
         }
-
         //Fetch
         first_byte = memory[PC];
         second_byte = memory[PC + 1];
@@ -47,12 +51,9 @@ int main() {
         PC += 2;
         test++;
     }
+    SDL_Delay(3000);
     tear_down_display();
     return EXIT_SUCCESS;
-}
-
-int handle_event(SDL_Event *event) {
-
 }
 
 int decode(unsigned char first_byte, unsigned char second_byte) {

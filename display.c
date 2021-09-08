@@ -8,6 +8,7 @@
 static unsigned char display[DISPLAY_HEIGHT][DISPLAY_WIDTH] = { 0 };
 static SDL_Window *window;
 static SDL_Renderer *renderer;
+static SDL_Rect rect;
 
 int setup_display() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -32,6 +33,10 @@ int setup_display() {
         printf("Error setting up renderer: %s\n", SDL_GetError());
         return -1;
     }
+    rect.h = PIXEL_SCALE_FACTOR;
+    rect.w = PIXEL_SCALE_FACTOR;
+    rect.x = 0;
+    rect.y = 0;
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -39,6 +44,7 @@ int setup_display() {
     return 1;
 }
 int tear_down_display() {
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 1;
@@ -70,6 +76,23 @@ int calculate_display_pixels(unsigned char x, unsigned char y, unsigned char N, 
 }
 
 int draw_display() {
+    //Assuming screen has already been cleared
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    for (int i = 0; i < DISPLAY_HEIGHT; i++) {
+        for (int j = 0; j < DISPLAY_WIDTH; j++) {
+            unsigned char is_pixel_on = display[i][j];
+            if (is_pixel_on) {
+                rect.x = j * PIXEL_SCALE_FACTOR;
+                rect.y = i * PIXEL_SCALE_FACTOR;
+                SDL_RenderDrawRect(renderer, &rect);
+                SDL_RenderFillRect(renderer, &rect);
+                printf("o");
+            } else {
+                printf(" ");
+            }
+        }
+        printf("\n");
+    }
     SDL_RenderPresent(renderer);
     return 1;
 }
@@ -80,6 +103,10 @@ int clear_display() {
             display[j][i] = 0;
         }
     }
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    // TODO: Render the actual blank screen. Might do it later
     return 1;
 }
 

@@ -1,5 +1,7 @@
 #define DISPLAY_WIDTH 64
 #define DISPLAY_HEIGHT 32
+#define PIXEL_SCALE_FACTOR 10
+
 #define BIT_N(num, n) ((num >> n) & 1)
 
 typedef struct draw_insn_data {
