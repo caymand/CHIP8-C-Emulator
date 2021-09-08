@@ -2,7 +2,6 @@
 
 
 typedef unsigned short stack_element_t;
-typedef unsigned short * stack_t;
 
 extern stack_element_t stack[STACK_SIZE];
 extern int stack_top;

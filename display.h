@@ -1,6 +1,16 @@
-#define DISPLAY_WIDTH 32
-#define DISPLAY_HEIGHT 64
+#define DISPLAY_WIDTH 64
+#define DISPLAY_HEIGHT 32
+#define BIT_N(num, n) ((num >> n) & 1)
 
-unsigned char display[DISPLAY_HEIGHT][DISPLAY_WIDTH];
+typedef struct draw_insn_data {
+    unsigned char x;
+    unsigned char y;
+    unsigned char N;
+} draw_insn_data;
 
+int calculate_display_pixels(unsigned char x, unsigned char y, unsigned char N, unsigned char* memory);
+int clear_display();
+int draw_display();
 
+int setup_display();
+int tear_down_display();

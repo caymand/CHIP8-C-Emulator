@@ -19,7 +19,7 @@ int stack_pop() {
         //TODO: Error msg
         return -1;
     }
-    stack_element_t element = stack[stack_top - 1];
     stack_top -= 1;
+    stack_element_t element = stack[stack_top];
     return element;
 }

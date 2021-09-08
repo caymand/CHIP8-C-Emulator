@@ -22,16 +22,28 @@ static unsigned char font_set[FONT_SET_LENGTH] =  {
     0xF0, 0x80, 0xF0, 0x80, 0x80
 };
 
-unsigned char registers[NUM_REGISTERS];
+unsigned char registers[NUM_REGISTERS] = { 0 }; //Initialize registers to be zero filled
 unsigned short I = 0;
 
-unsigned char *setup_memory() {
+unsigned char *setup_memory(FILE *game) {
     unsigned char *memory = malloc(sizeof(unsigned char) * MEM_SIZE);
     //Setup font set
     for (int i = FONT_SET_START; i < FONT_SET_END; i++) {
         memory[i] = font_set[i - FONT_SET_START];
     }
+    //Load memory with instructions
+    int i = GAME_ADDR_START;
+    int byte;
+    while (i < MEM_SIZE && (byte = fgetc(game)) != EOF) {
+        memory[i] = byte;
+        i++;
+    }
+    if(ferror(game))
+        printf("Error setting up memory\n");
+    else if (feof(game))
+        printf("Finished setting up memory and loaded num bytes: %d\n", i - GAME_ADDR_START);
     return memory;
 }
+
 
 
